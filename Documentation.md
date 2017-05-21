@@ -59,7 +59,7 @@ cluster mainly.
     - **PublicSubnetA/B**: web servers stack, the subnets are publicly accessible.
     - **PrivateSubnetA/B**: database stack, the subnets are not publicly accessible.
 
-    The routing for these subnets are as follows:
+    The routing for these subnets is as follows:
 
     - **PublicRouteTable**: opens traffic from the public subnets to the Internet.
     - **PrivateRouteTable**: ensures privacy for the hidden subnets.
