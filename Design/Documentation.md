@@ -108,7 +108,7 @@ The current state of the automation template reflects what I managed to build in
 available, and so there are a few aspects which could (and probably should) be improved before
 going live with it (note that some are more important than others):
 
-- Add **CLoudWatch Alarms** for:
+- Add **CloudWatch Alarms** for:
     - **Abnormal Bandwidth usage** (signs of attack);
     - **ELB latency**;
     - **Database instance failures**.
@@ -135,20 +135,7 @@ S3 bucket. The benefit is good and the costs should be negligible.
 allow any SSH connections to the nodes from any public IP address; this setting should be
 considerably more restrictive.
 
-- Add **parameter for MyBB Admin credentials**; currently they are hardcoded (see "Evaluation
-access" section).
-
-- **Split template** into separate stacks: (A) vpc, (B) web servers and (C) database; this would
-allow each stack to suffer updates and maintenance with less consequences to the other stacks; it
-would also make things more complex, of course.
-
 - **Tag everything**.
-
-- **Custom AMI** or **make cloud-init scripts more private** (S3 or CodeCommit): The automation
-template (along with the documentation) are revision-controlled on a public **GitHub repository**;
-this repository is also used (for simplicity) to host the *cloud-init* installation script for
-MyBB 1.8.6 (including MyBB sources). It would be preferable that this whole thing would be turned
-into a new AMI instance or at least the codes would be placed in a more controlled environment (S3 or CodeCommit).
 
 - Use **all Availability-Zones** in the region; currently only two AZs are used.
 
