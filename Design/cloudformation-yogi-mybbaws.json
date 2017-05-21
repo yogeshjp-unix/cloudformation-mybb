@@ -1,14 +1,14 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
 
-  "Description": "CloudFormation automation template which launches an auto-scaling infrastructure for running the MyBB application version 1.8.6. The infrastructure deploys workers over multiple availability zones within a single region (for now).",
+  "Description": "CloudFormation automation template which launches an auto-scaling infrastructure for running the MyBB application ",
 
   "Parameters": {
 
     "OperationalEMail": {
       "Type": "String",
       "Description": "Scaling-related and other notifications will be sent to this EMail address.",
-      "Default": "mybbaws@gmail.com",
+      "Default": "yogeshjp@gmail.com",
       "AllowedPattern": "\\w[a-zA-Z0-9_\\-\\.]*@\\w[a-zA-Z0-9\\-\\.]*",
       "ConstraintDescription": "Must be a valid email address!"
     },
@@ -117,10 +117,10 @@
       "PublicSubnetB": {
         "CidrBlock": "10.0.16.0/20"
       },
-      "HiddenSubnetA": {
+      "PrivateSubnetA": {
         "CidrBlock": "10.0.32.0/20"
       },
-      "HiddenSubnetB": {
+      "PrivateSubnetB": {
         "CidrBlock": "10.0.48.0/20"
       }
     },
@@ -200,24 +200,24 @@
       }
     },
 
-    "HiddenSubnetA": {
+    "PrivateSubnetA": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "VpcId": { "Ref": "VPC" },
         "AvailabilityZone": {
           "Fn::Select": [ "0", { "Fn::GetAZs": "" } ]
         },
-        "CidrBlock": { "Fn::FindInMap": [ "Subnets", "HiddenSubnetA", "CidrBlock" ] }
+        "CidrBlock": { "Fn::FindInMap": [ "Subnets", "PrivateSubnetA", "CidrBlock" ] }
       }
     },
-    "HiddenSubnetB": {
+    "PrivateSubnetB": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "VpcId": { "Ref": "VPC" },
         "AvailabilityZone": {
           "Fn::Select": [ "1", { "Fn::GetAZs": "" } ]
         },
-        "CidrBlock": { "Fn::FindInMap": [ "Subnets", "HiddenSubnetB", "CidrBlock" ] }
+        "CidrBlock": { "Fn::FindInMap": [ "Subnets", "PrivateSubnetB", "CidrBlock" ] }
       }
     },
 
@@ -262,18 +262,18 @@
         ]
       }
     },
-    "PublicToHiddenSecurityGroupEgress": {
+    "PublicToPrivateSecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties":           {
         "GroupId": { "Fn::GetAtt": [ "PublicSecurityGroup", "GroupId" ] },
-        "DestinationSecurityGroupId": { "Fn::GetAtt": [ "HiddenSecurityGroup", "GroupId" ] },
+        "DestinationSecurityGroupId": { "Fn::GetAtt": [ "PrivateSecurityGroup", "GroupId" ] },
         "FromPort": { "Ref": "DBPort" },
         "ToPort": { "Ref": "DBPort" },
         "IpProtocol": "tcp"
       }
     },
 
-    "HiddenSecurityGroup": {
+    "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "VpcId": { "Ref": "VPC" },
@@ -294,10 +294,10 @@
         ]
       }
     },
-    "HiddenFromPublicSecurityGroupIngress": {
+    "PrivateFromPublicSecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties":           {
-        "GroupId": { "Fn::GetAtt": [ "HiddenSecurityGroup", "GroupId" ] },
+        "GroupId": { "Fn::GetAtt": [ "PrivateSecurityGroup", "GroupId" ] },
         "SourceSecurityGroupId": { "Fn::GetAtt": [ "PublicSecurityGroup", "GroupId" ] },
         "FromPort": { "Ref": "DBPort" },
         "ToPort": { "Ref": "DBPort" },
@@ -335,24 +335,24 @@
       }
     },
 
-    "HiddenRouteTable": {
+    "PrivateRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "VPC" }
       }
     },
-    "HiddenSubnetARouteTableAssociation": {
+    "PrivateSubnetARouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
-        "RouteTableId": { "Ref": "HiddenRouteTable" },
-        "SubnetId": { "Ref": "HiddenSubnetA" }
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "SubnetId": { "Ref": "PrivateSubnetA" }
       }
     },
-    "HiddenSubnetBRouteTableAssociation": {
+    "PrivateSubnetBRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
-        "RouteTableId": { "Ref": "HiddenRouteTable" },
-        "SubnetId": { "Ref": "HiddenSubnetB" }
+        "RouteTableId": { "Ref": "PrivateRouteTable" },
+        "SubnetId": { "Ref": "PrivateSubnetB" }
       }
     },
 
@@ -366,7 +366,7 @@
         "Port": { "Ref": "DBPort" },
         "DBSubnetGroupName": { "Ref": "DBSubnetGroup" },
         "VpcSecurityGroupIds": [
-          { "Ref": "HiddenSecurityGroup" }
+          { "Ref": "PrivateSecurityGroup" }
         ]
       }
     },
@@ -375,8 +375,8 @@
       "Properties": {
         "DBSubnetGroupDescription": "This is the group of (private) subnets used by the RDS DB.",
         "SubnetIds": [
-          { "Ref": "HiddenSubnetA" },
-          { "Ref": "HiddenSubnetB" }
+          { "Ref": "PrivateSubnetA" },
+          { "Ref": "PrivateSubnetB" }
         ]
       }
     },
@@ -386,7 +386,7 @@
         "Engine": "aurora",
         "DBSubnetGroupName": { "Ref": "DBSubnetGroup" },
         "DBClusterIdentifier": { "Ref": "DBCluster" },
-        "AvailabilityZone": { "Fn::GetAtt": [ "HiddenSubnetA", "AvailabilityZone" ] },
+        "AvailabilityZone": { "Fn::GetAtt": [ "PrivateSubnetA", "AvailabilityZone" ] },
         "DBInstanceClass": { "Ref": "DBInstanceClass" },
         "PubliclyAccessible": false
       }
@@ -397,7 +397,7 @@
         "Engine": "aurora",
         "DBSubnetGroupName": { "Ref": "DBSubnetGroup" },
         "DBClusterIdentifier": { "Ref": "DBCluster" },
-        "AvailabilityZone": { "Fn::GetAtt": [ "HiddenSubnetB", "AvailabilityZone" ] },
+        "AvailabilityZone": { "Fn::GetAtt": [ "PrivateSubnetB", "AvailabilityZone" ] },
         "DBInstanceClass": { "Ref": "DBInstanceClass" },
         "PubliclyAccessible": false
       }
@@ -602,7 +602,7 @@
             },
 
             "sources": {
-              "/tmp/mybb": "https://github.com/vpalos/cloudformation-mybb/tarball/master"
+              "/tmp/mybb": "https://github.com/yogeshjp-unix/cloudformation-mybb/tarball/master"
             },
 
             "files": {
