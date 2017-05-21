@@ -1174,7 +1174,7 @@ INSERT INTO `mybb_settings` (`sid`, `name`, `title`, `description`, `optionscode
 (2, 'boardclosed_reason', 'Board Closed Reason', 'If your forum is closed, you can set a message here that your visitors will be able to see when they visit your forums. You can leave this empty to use the language files.', 'textarea', 'These forums are currently closed for maintenance. Please check back later.', 2, 1, 1),
 (3, 'bbname', 'Board Name', 'The name of your community. We recommend that it is not over 75 characters.', 'text', 'Forums', 1, 2, 1),
 (4, 'bburl', 'Board URL', 'The url to your forums.<br />Include the http://. Do NOT include a trailing slash.', 'text', 'http://MYBB_DOMAINNAME', 2, 2, 1),
-(5, 'homename', 'Homepage Name', 'The name of your homepage. This will appear in the footer with a link to it.', 'text', 'VPalos MyBB AWS', 3, 2, 1),
+(5, 'homename', 'Homepage Name', 'The name of your homepage. This will appear in the footer with a link to it.', 'text', 'Yogi MyBB AWS', 3, 2, 1),
 (6, 'homeurl', 'Homepage URL', 'The full URL of your homepage. This will be linked to in the footer along with its name.', 'text', 'http://MYBB_DOMAINNAME/', 4, 2, 1),
 (7, 'adminemail', 'Admin Email', 'The administrator''s email address. This will be used for outgoing emails sent via the forums.', 'text', 'MYBB_ADMINEMAIL', 5, 2, 1),
 (8, 'returnemail', 'Return Email', 'The email address for incoming replies to outgoing emails sent via the forums and is useful for no-reply accounts. Leave blank to use the admin email address instead.', 'text', '', 6, 2, 1),
