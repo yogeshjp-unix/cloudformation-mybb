@@ -35,7 +35,7 @@ To run this project in an AWS Account do the following:
 
 ## Architecture Design
 
-Refer: "rchitechture Diagram-myBB.pdf"
+Refer: "Architechture Diagram-myBB.pdf"
 
 ## Security considerations
 
@@ -164,10 +164,5 @@ performance metrics; rules for timed scaling could be defined to optimize costs.
 - **HTTPS support**: For a production environment I would enable HTTPS support and even try to
 force traffic through it (redirect "http://" traffic by HTTP 301 to "https://").
 
-
-## That's it.
-
-#### Thank you!
-
-
+#### Thank you! Enjoy.
 
