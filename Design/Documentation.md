@@ -17,9 +17,7 @@ the AWS account (for SSH access).
 
 ## Overview
 
-This is a **complete AWS CloudFormation template** (along with additional required source codes
-residing in the public GitHub repository
-[vpalos/cloudformation-mybb](https://github.com/vpalos/cloudformation-mybb/)) for running the
+This is a "complete AWS CloudFormation template" for running the
 MyBB application on a scalable, highly-available and secure infrastructure.
 
 ### Running the stack
@@ -28,25 +26,11 @@ To run this project in an AWS Account do the following:
 
 - Create an EC2 KeyPair (required for SSH access, can't be automated by CF);
 - Launch a stack from this template with CloudFormation;
-- ...drink coffee...
+- ...Have fun, but do check the events for progress...
 - Go to the URL in the "WWWBalancerDNSName" output variable for the live MyBB application.
-
-### What's left
-
-The current template does not cover uploading user-generated files to an S3 bucket and delivering
-them via CloudFront. Please see the last section in this document for an explanation why I chose
-not to do that using S3FS (or some EBS synchronization method) and also for further suggestions
-for improvements.
 
 ## Evaluation Access Account
 
-- AWS Console access:
-    - URL: [https://851806062413.signin.aws.amazon.com/console](https://851806062413.signin.aws.amazon.com/console)
-    - Username: observer
-    - Password: LEoZ$uSy6]Wr
-    - Notes:
-        - Currently there are **2 stacks** deployed in region **us-east-1 (N. Virginia)**.
-        - Read-only access granted for: **CloudFormation, EC2, RDS, S3, SNS and CloudWatch**.
 
 - MyBB application Administrator Account:
     - Username: admin
@@ -69,16 +53,16 @@ for improvements.
 meaning the web-servers (and associated components), from the private parts, meaning the database
 cluster mainly.
     - **PublicSecurityGroup**: HTTP/HTTPS/SSH access permitted from outside.
-    - **HiddenSecurityGroup**: Database, access permitted only from web stack to DB stack.
+    - **PrivateSecurityGroup**: Database, access permitted only from web stack to DB stack.
 
 - There are two Subnets associated with each group (in distinct availability zones):
     - **PublicSubnetA/B**: web servers stack, the subnets are publicly accessible.
-    - **HiddenSubnetA/B**: database stack, the subnets are not publicly accessible.
+    - **PrivateSubnetA/B**: database stack, the subnets are not publicly accessible.
 
     The routing for these subnets is as follows:
 
     - **PublicRouteTable**: opens traffic from the public subnets to the Internet.
-    - **HiddenRouteTable**: ensures privacy for the hidden subnets.
+    - **PrivateRouteTable**: ensures privacy for the hidden subnets.
 
     Currently the hidden subnets have no access to the outside world (saw no point yet).
 
@@ -130,19 +114,6 @@ failure) to keep this infrastructure robust and my intent was that DDoS attacks 
 The current state of the automation template reflects what I managed to build in the time I had
 available, and so there are a few aspects which could (and probably should) be improved before
 going live with it (note that some are more important than others):
-
-- **Add S3/CloudFront support for uploaded files**: I intentionally did not use S3FS for storage
-and retrieval of uploaded files. I would definitely avoid this option if possible and use the
-AWS PHP SDK to write the files straight to S3. Here's why:
-
-    - Using a FS abstraction is more difficult to control and debug, errors are less likely to be
-    visible and we can't enforce retries or other type of error handling.
-    - Reading those files would take them from S3, through the EC2 machines to the user; this
-    complicates the architecture badly, will perform badly and denies use of CloudFront.
-
-    I've taken a look over the MyBB codebase and it should not be difficult to add support for S3
-file uploads, which easily extends to support **downloading files via CloudFront CDN**. This would
-perform and scale better.
 
 - Add **CLoudWatch Alarms** for:
     - **Abnormal Bandwidth usage** (signs of attack);
