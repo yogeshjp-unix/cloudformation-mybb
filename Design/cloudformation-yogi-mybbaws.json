@@ -127,6 +127,7 @@
 
     "WWWAMIByRegion": {
       "us-east-1":      { "hvm64": "ami-60b6c60a" },
+      "us-east-2":      { "hvm64": "ami-c5062ba0" },
       "us-west-1":      { "hvm64": "ami-d5ea86b5" },
       "us-west-2":      { "hvm64": "ami-f0091d91" },
       "eu-west-1":      { "hvm64": "ami-bff32ccc" },
