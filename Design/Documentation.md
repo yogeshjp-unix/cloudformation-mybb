@@ -146,7 +146,7 @@ using a **NAT Gateway**.
 - Add an **ElasticCache/Memcache** deployment to improve performance.
 
 - **Time-based scaling**: Currently, the Auto-Scaling Groups resize solely based on CloudWatch
-performance metrics; rules for timed scaling could be defined to optimize costs.
+performance metrics, rules for timed scaling could be defined to optimize costs.
 
 - **HTTPS support**: For a production environment I would enable HTTPS support and even try to
 force traffic through it (redirect "http://" traffic by HTTP 301 to "https://").
