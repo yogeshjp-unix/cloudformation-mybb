@@ -7,7 +7,7 @@
 # properly added to the system by this point.
 #
 
-# Environment variables (expected).
+# Environment variables (expected)
 echo $MYBB_ADMINEMAIL
 echo $MYBB_DOMAINNAME
 echo $MYBB_DBNAME
