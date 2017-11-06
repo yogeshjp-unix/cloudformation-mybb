@@ -13,7 +13,7 @@ running the MyBB application on a scalable, highly-available and secure infrastr
 
 To run this project in an AWS Account do the following:
 
-- Create an EC2 KeyPair (required for SSH access, can't be automated by CF);
+- Create an EC2 KeyPair (required for SSH access);
 - Launch a stack from this template with CloudFormation;
 - ...Have fun for sometime, but watch the events regularly for the progress...
 - Go to the URL in the "WWWBalancerDNSName" output variable for the live MyBB application.
